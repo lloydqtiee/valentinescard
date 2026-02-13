@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Be My Valentine?</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #fce4ec;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            position: relative;
+            touch-action: manipulation; /* Prevents zooming on fast taps */
+        }
+
+        #catBackground {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            grid-template-rows: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 10px;
+            padding: 10px;
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .bg-cat {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 350px;
+            width: 85%;
+            z-index: 10;
+        }
+
+        .heart {
+            font-size: 50px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            position: relative;
+            min-height: 60px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #yesBtn {
+            background-color: #ef5350;
+            color: white;
+        }
+
+        #noBtn {
+            background-color: #f8bbd0;
+            color: #ad1457;
+            position: absolute;
+            left: 130px;
+        }
+
+        .celebration-text {
+            color: #ef5350;
+            animation: bounce 0.5s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="catBackground"></div>
+
+    <div class="card" id="mainCard">
+        <span class="heart">💖</span>
+        <h1 id="question">Rica Mariel Olan,<br>Can I be your Valentine?</h1>
+        <div class="buttons">
+            <button id="yesBtn" onclick="celebrate()">Yes</button>
+            <button id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">No</button>
+        </div>
+    </div>
+
+    <script>
+        const catEmojis = ['🐱', '🐈', '😻', '😽', '😸', '🐾', '🧶'];
+        let yesSize = 1;
+
+        function createBackground() {
+            const bg = document.getElementById('catBackground');
+            const catCount = 60; 
+            for (let i = 0; i < catCount; i++) {
+                const catDiv = document.createElement('div');
+                catDiv.className = 'bg-cat';
+                catDiv.innerHTML = catEmojis[Math.floor(Math.random() * catEmojis.length)];
+                catDiv.style.transform = `rotate(${Math.random() * 360}deg)`;
+                bg.appendChild(catDiv);
+            }
+        }
+        createBackground();
+
+        function moveButton() {
+            const btn = document.getElementById('noBtn');
+            const yesBtn = document.getElementById('yesBtn');
+            
+            // Padding to keep button away from screen edges
+            const padding = 50;
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth - padding);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight - padding);
+            
+            btn.style.position = 'fixed';
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+
+            yesSize += 0.2;
+            yesBtn.style.transform = `scale(${yesSize})`;
+        }
+
+        function celebrate() {
+            const card = document.getElementById('mainCard');
+            card.innerHTML = `
+                <span class="heart">😻</span>
+                <h1 class="celebration-text">SHE SAID YES 🥰🌹</h1>
+            `;
+            document.body.style.backgroundColor = "#ffc1cc";
+            setInterval(createFallingCat, 300);
+        }
+
+        function createFallingCat() {
+            const cat = document.createElement('div');
+            cat.innerHTML = catEmojis[Math.floor(Math.random() * catEmojis.length)];
+            cat.style.position = 'fixed';
+            cat.style.left = Math.random() * 100 + 'vw';
+            cat.style.top = '-50px';
+            cat.style.fontSize = '30px';
+            cat.style.zIndex = '100';
+            cat.style.pointerEvents = 'none';
+            cat.style.transition = 'top 3s linear, transform 3s linear';
+            document.body.appendChild(cat);
+
+            setTimeout(() => {
+                cat.style.top = '110vh';
+                cat.style.transform = `rotate(${Math.random() * 720}deg)`;
+            }, 50);
+
+            setTimeout(() => { cat.remove(); }, 3500);
+        }
+    </script>
+</body>
+</html>
